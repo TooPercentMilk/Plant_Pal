@@ -31,10 +31,10 @@ def resize_and_sharpen(image_path, ar_limits=(0, 100)):
 
 
 class CustomDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, ar_limits=(0, 100)):
-        self.root_dir = data_dir
+    def __init__(self, filenames, ar_limits=(0, 100)):
+        self.root_dir = filenames
         self.ar_limits = ar_limits
-        self.image_paths = [os.path.join(data_dir, fname) for fname in os.listdir(data_dir) if fname.endswith(('jpg'))]
+        self.image_paths = [os.path.join('../Data', fname) for fname in filenames]
 
     def __len__(self):
         return len(self.image_paths)
