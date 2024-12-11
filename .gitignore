@@ -1,5 +1,5 @@
 # Ignore the images because they contain 2G of data
-data/
+Data/
 
 # Ignore DS_Store
 .DS_Store
