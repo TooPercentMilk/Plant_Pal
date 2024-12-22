@@ -40,7 +40,40 @@ class CustomDataset(torch.utils.data.Dataset):
         return len(self.image_paths)
 
     def __getitem__(self, idx):
+        label = int(self.image_paths[idx].split('/')[-1])
         image_path = self.image_paths[idx]
         image = resize_and_sharpen(image_path, self.ar_limits)
-        return image
+        return image, label
     #TODO: handle None images returned from resize_and_sharpen
+
+class Historian():
+    def __init__(self, early_stopping=2):
+        self.train_losses = []
+        self.train_accuracies = []
+        self.val_losses = []
+        self.val_accuracies = []
+        self.stop = early_stopping
+    
+    def record(self, loss, accuracy, val_loss, val_accuracy):
+        self.losses.append(loss)
+        self.accuracies.append(accuracy)
+        self.val_losses.append(val_loss)
+        self.val_accuracies.append(val_accuracy)
+        if len(self.val_losses) < self.stop:
+            return True
+        for i in range(self.stop):
+            if self.val_losses[-1 - i] > self.val_losses[-2 - i]:
+                return False
+        return True
+    
+    def plot(self):
+        fig, ax = plt.subplots(2, 1, figsize=(10, 10))
+        ax[0].plot(self.losses, label='train loss')
+        ax[0].plot(self.val_losses, label='val loss')
+        ax[0].set_title('Loss')
+        ax[0].legend()
+        ax[1].plot(self.accuracies, label='train accuracy')
+        ax[1].plot(self.val_accuracies, label='val accuracy')
+        ax[1].set_title('Accuracy')
+        ax[1].legend()
+        plt.show()
