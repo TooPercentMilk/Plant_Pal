@@ -40,6 +40,7 @@ class CustomDataset(torch.utils.data.Dataset):
         return len(self.image_paths)
 
     def __getitem__(self, idx):
+        label = self.image_paths[idx].split('/')[:-1]
         label = int(self.image_paths[idx].split('/')[-1])
         image_path = self.image_paths[idx]
         image = resize_and_sharpen(image_path, self.ar_limits)
